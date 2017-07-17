@@ -13,6 +13,7 @@ screen = pygame.display.get_surface()
 rospy.init_node("teleserver_key")
 pub_dir = rospy.Publisher("direction", Int16MultiArray, queue_size=1)
 pub_dconf = rospy.Publisher("disconfort", Int16, queue_size=1)
+pub_dconf2 = rospy.Publisher("disconfort_key", Int16, queue_size=1)
 
 rate = rospy.Rate(10)
 array = Int16MultiArray()
@@ -42,6 +43,7 @@ while not rospy.is_shutdown():
             if event.key == K_SPACE:
                 disconf.data = 1
                 rospy.loginfo("user disconf")
+                pub_dconf2.publish(disconf)
 
         if event.type == KEYUP:
             pos = [1, 1]
@@ -51,5 +53,6 @@ while not rospy.is_shutdown():
 
     pub_dir.publish(array)
     pub_dconf.publish(disconf)
+
     rate.sleep()
     

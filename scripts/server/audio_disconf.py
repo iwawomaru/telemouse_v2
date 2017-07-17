@@ -28,7 +28,8 @@ class AudioDisconf(object):
             self.esn = pickle.load(f)
         
         sub = rospy.Subscriber("audio", AudioData, self.callback)
-      
+        sub_key = rospy.Subscriber("disconfort_key", Int16, self.callback_key)
+
         self.pub = rospy.Publisher("disconfort", Int16, queue_size=1)
         self.disconf = Int16()
 
@@ -40,21 +41,20 @@ class AudioDisconf(object):
         yf = fft(data)[:self.N/2:4].real/(self.N/2)
         out = self.esn.prop(yf)[1][0]
         self.accum = (self.accum + out) if out > self.disconf_t else self.accum
-        if self.accum > self.acc_t:
+        rospy.loginfo("accum value = " + str(self.accum))
 
-            print "-------------", os.getcwd()
+        if self.accum > self.acc_t:
             rospy.loginfo("disconf")
-            print "deconf: ", self.accum
             self.accum = 0
-            #self.hit_sound.play()
             self.disconf.data = 1
-            self.pub.publish(self.disconf.data)
         else:
             self.disconf.data = 0
-            self.pub.publish(self.disconf.data)
-            print out
-        self.accum *= self.decay
-    
+        self.pub.publish(self.disconf.data)
+        self.accum = (self.accum * self.decay) if (self.accum > 0.01) else 0
+
+    def callback_key(self, data):
+        rospy.loginfo("call callback_key")
+        return
     
 if __name__ == "__main__":
     obj = AudioDisconf(node_name="audio_disconf", 

@@ -47,7 +47,7 @@ class Avoidance(object):
     def callback(self, disconfort):
         if disconfort.data == 1:
 
-            if self.rest_counter < 100:
+            if self.rest_counter < 50:
                 return
             """
             rospy.wait_for_service("serv_off")
@@ -74,7 +74,7 @@ class Avoidance(object):
                 print "Service call failed: %s" % e
 
             self.rest_counter = 0
-
+            
         else:
             self.rest_counter += 1
 
