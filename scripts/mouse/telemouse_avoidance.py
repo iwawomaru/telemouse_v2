@@ -46,20 +46,20 @@ class Avoidance(object):
 
     def callback(self, disconfort):
         if disconfort.data == 1:
-            """
-            if self.rest_counter < 200:
-                return
 
+            if self.rest_counter < 100:
+                return
+            """
             rospy.wait_for_service("serv_off")
             try:
                 soff = rospy.ServiceProxy("serv_off", Empty)
                 soff()
             except rospy.ServiceException, e:
                 print "Service call failed: %s" % e
-                
+            """                
                 
             self.hit_sound.play()
-            """
+
             wiringpi2.pwmWrite(self.gp_out, self.LEFT)
             wiringpi2.delay(500)
             wiringpi2.pwmWrite(self.gp_out, self.RIGHT)
