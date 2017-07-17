@@ -16,8 +16,8 @@ import pygame
 
 class AudioDisconf(object):
 
-    def __init__(self, node_name="audio_disconf", esn_pickle="esn.pickle",
-                 acc_t=2.0, disconf_t=0.6, decay=0.6):
+    def __init__(self, node_name, esn_pickle,
+                 acc_t, disconf_t, decay):
         self.N = 256
         self.accum = 0
         self.acc_t = acc_t
@@ -58,7 +58,7 @@ class AudioDisconf(object):
     
 if __name__ == "__main__":
     obj = AudioDisconf(node_name="audio_disconf", 
-                       esn_pickle="/home/osawa/ros_catkin_ws/src/telemouse_v2/scripts/esn2.pickle",
+                       esn_pickle="/home/osawa/ros_catkin_ws/src/telemouse_v2/scripts/server/esn2.pickle",
                        acc_t=1.5, disconf_t=0.95, decay=0.3)
     rospy.spin()
 

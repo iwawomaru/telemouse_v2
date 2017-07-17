@@ -12,7 +12,7 @@
   </node>
   </group>
 
-  <node name="teleserver_key" pkg="telemouse" type="teleserver_key.py"/>
-  <node name="audio_disconf" pkg="telemouse" type="audio_disconf.py"/>
+  <node name="teleserver_key" pkg="telemouse_v2" type="teleserver_key.py"/>
+  <node name="audio_disconf" pkg="telemouse_v2" type="audio_disconf.py"/>
 
 </launch>

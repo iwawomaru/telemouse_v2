@@ -15,6 +15,6 @@
   </node>
   </group>
 
-  <node name="telemouse_avoidance" pkg="telemouse" type="telemouse_avoidance.py" />
+  <node name="telemouse_avoidance" pkg="telemouse_v2" type="telemouse_avoidance.py" />
 
 </launch>
