@@ -197,3 +197,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(audio_capture src/mouse/audio_capture.cpp)
+target_link_libraries(audio_capture ${catkin_LIBRARIES})
+add_dependencies(audio_capture telemouse_v2)
