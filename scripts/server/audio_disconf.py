@@ -19,7 +19,9 @@ class AudioDisconf(object):
     def __init__(self, node_name, esn_pickle,
                  acc_t, disconf_t, decay):
         self.N = 256
+        self.num_average = 50
         self.accum = 0
+        self.accum_history = [0] * self.num_average
         self.acc_t = acc_t
         self.disconf_t = disconf_t
         self.decay = 0.6
@@ -41,24 +43,35 @@ class AudioDisconf(object):
         yf = fft(data)[:self.N/2:4].real/(self.N/2)
         out = self.esn.prop(yf)[1][0]
         self.accum = (self.accum + out) if out > self.disconf_t else self.accum
-        rospy.loginfo("accum value = " + str(self.accum))
+        self.accum_history.append(self.accum)
+        # rospy.loginfo("accum value = " + str(self.accum))
 
         if self.accum > self.acc_t:
-            rospy.loginfo("disconf")
+            # rospy.loginfo("disconf")
             self.accum = 0
             self.disconf.data = 1
         else:
             self.disconf.data = 0
         self.pub.publish(self.disconf.data)
-        self.accum = (self.accum * self.decay) if (self.accum > 0.01) else 0
+        self.accum = (self.accum * self.decay) if (self.accum > 0.01) else 0.
 
     def callback_key(self, data):
-        rospy.loginfo("call callback_key")
+        rospy.loginfo("call callback_key %f", 
+                      np.sum(self.accum_history[-self.num_average:]))
+        target_var = np.average(self.accum_history[-self.num_average:])
+        self.acc_t -= 0.4*(self.acc_t - target_var)
         return
     
 if __name__ == "__main__":
+    """
+    # This parameter is well choned
     obj = AudioDisconf(node_name="audio_disconf", 
                        esn_pickle="/home/osawa/ros_catkin_ws/src/telemouse_v2/scripts/server/esn2.pickle",
                        acc_t=1.5, disconf_t=0.95, decay=0.3)
+    """
+
+    obj = AudioDisconf(node_name="audio_disconf",
+                       esn_pickle="/home/osawa/ros_catkin_ws/src/telemouse_v2/scripts/server/esn2.pickle",
+                       acc_t=5.0, disconf_t=0.95, decay=0.3)
     rospy.spin()
 

@@ -49,14 +49,14 @@ class Avoidance(object):
 
             if self.rest_counter < 50:
                 return
-            """
-            rospy.wait_for_service("serv_off")
+
+            # rospy.wait_for_service("serv_off")
             try:
                 soff = rospy.ServiceProxy("serv_off", Empty)
                 soff()
             except rospy.ServiceException, e:
                 print "Service call failed: %s" % e
-            """                
+
                 
             self.hit_sound.play()
 
